@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 60px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+      }
+
+      .app {
+        width: 800px;
+        max-width: 90%;
+        background: #fff;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .heading {
+        display: flex;
+        gap: 10px;
+      }
+
+      #todo-inp {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+      }
+
+      #todo-inp:focus {
+        border-color: #667eea;
+      }
+
+      #todo-add-btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        background: #667eea;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      #todo-add-btn:hover {
+        background: #5563d6;
+      }
+
+      .todo-list {
+        margin-top: 20px;
+      }
+
+      #todo-ul {
+        list-style: none;
+      }
+
+      #todo-ul li {
+        background: #f4f4f4;
+        padding: 14px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      #todo-ul li:hover {
+        background: #667eea;
+        color: white;
+        transform: translateX(5px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app">
+      <h1>Todo</h1>
+
+      <div class="heading">
+        <input type="text" id="todo-inp" placeholder="Add Task..." />
+        <button id="todo-add-btn">Add</button>
+      </div>
+
+      <div class="todo-list">
+        <ul id="todo-ul">
+          <li>The Odyssey</li>
+          <li>Spider-Man Brand New Day</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      const addBtn = document.getElementById("todo-add-btn");
+      const todoInp = document.getElementById("todo-inp");
+      const ul = document.getElementById("todo-ul");
+
+      fetch("https://api.freeapi.app/api/v1/public/quotes")
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          ul.innerHTML = "";
+
+          for (const quote of data.data.data) {
+            let li = document.createElement("li");
+            li.innerText = quote.content;
+
+            li.addEventListener("click", (e) => {
+              e.target.remove();
+            });
+
+            ul.appendChild(li);
+          }
+        });
+
+      addBtn.addEventListener("click", () => {
+        if (todoInp.value.trim() === "") return;
+
+        let li = document.createElement("li");
+        li.innerText = todoInp.value;
+
+        li.addEventListener("click", (e) => {
+          e.target.remove();
+        });
+
+        ul.appendChild(li);
+
+        todoInp.value = "";
+      });
+    </script>
+  </body>
+</html>
